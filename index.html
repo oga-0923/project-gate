@@ -518,7 +518,7 @@ textarea{font:inherit;color:var(--fg);background:#0c1416;border:1px solid var(--
 <div id="devBanner" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.min.js"></script>
 <script>
 // ===== 調整用の設定 =====
 const APP_VERSION = '2.8.0';
@@ -2460,8 +2460,8 @@ const PASS_COLORS=['#d4af37','#c0c8d0','#ff3d7f'];
    - CLOUD.url と CLOUD.anon が空のあいだは今まで通り（購入は「準備中」）
    ===================================================================== */
 const CLOUD = {
-  url: '',          // SupabaseのProject URL（例：https://abcd1234.supabase.co）
-  anon: '',         // Supabaseの anon public キー（公開してよいキー）
+  url: 'https://lvalxfgbazyoavoswtep.supabase.co',          // SupabaseのProject URL（例：https://abcd1234.supabase.co）
+  anon: 'sb_publishable_-jSor_tr4Dl3NHO0S-O8_A_JD_x4Vm8',  // Supabaseの Publishable キー（公開してよいキー）
   testMode: true,   // Stripeのテストモード中は true（ショップに「テスト決済」と表示）
 };
 function cloudOn(){ return !!(CLOUD.url && CLOUD.anon && window.supabase); }
