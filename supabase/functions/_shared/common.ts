@@ -23,7 +23,8 @@ export const PASS_TRIAL_DAYS = 14;
 export const AGE_CAP: Record<string, number> = { u16: 5000, u18: 10000, adult: Number.POSITIVE_INFINITY };
 
 // ---- Clients ----
-export const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", {
+// (A placeholder keeps the function alive before the secret is set; Stripe calls then fail cleanly.)
+export const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "sk_not_configured", {
   httpClient: Stripe.createFetchHttpClient(),
 });
 export const admin = createClient(
