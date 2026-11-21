@@ -518,9 +518,10 @@ textarea{font:inherit;color:var(--fg);background:#0c1416;border:1px solid var(--
 <div id="devBanner" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 // ===== 調整用の設定 =====
-const APP_VERSION = '2.7.0';
+const APP_VERSION = '2.8.0';
 // 'dev'：開発用（設定にユーザー／開発者の切り替えが出る）。'release'：一般公開用（ユーザー画面のみ）
 // 一般公開用は tools/build_release.py が自動で 'release' に書き換えて index.html を作る
 const BUILD = 'release';
@@ -1302,6 +1303,30 @@ const STR = {
   'r7':['進化カードは、前のターンから場にいる進化元に重ねて出す。ダメージは引き継ぐ。','Evolution cards go on top of their base monster that has been in play since last turn. Damage carries over.','进化卡叠放在上回合起在场的进化源上，伤害会继承。','Las evoluciones se colocan sobre su monstruo base en juego desde el turno anterior. El daño se mantiene.','진화 카드는 이전 턴부터 필드에 있던 진화 전 몬스터 위에 겹쳐 낸다. 데미지는 이어진다.','Evoluções vão sobre o monstro base em jogo desde o turno anterior. O dano continua.',"विकास कार्ड उस मूल राक्षस के ऊपर रखे जाते हैं जो पिछले टर्न से मैदान में है। क्षति बनी रहती है।","توضع بطاقات التطوّر فوق وحشها الأساسي الموجود في اللعب منذ الدور السابق. يبقى الضرر.","Les cartes Évolution se posent sur leur monstre de base en jeu depuis le tour précédent. Les dégâts sont conservés.","বিবর্তন কার্ড আগের টার্ন থেকে মাঠে থাকা মূল দানবের উপর রাখা হয়। ক্ষতি থেকে যায়।","Карты эволюции кладутся на базового монстра, находящегося в игре с прошлого хода. Урон сохраняется.","Kartu evolusi ditumpuk di atas monster dasarnya yang sudah di medan sejak giliran lalu. Damage tetap terbawa."],
   'r8':['フィールドカードは1人1枚。別のフィールドを出すと張り替わる。','One Field card per player. Playing a different one replaces it.','每人限1张场地卡，打出其他场地卡会替换。','Un Campo por jugador. Jugar otro lo reemplaza.','필드 카드는 1인 1장. 다른 필드를 내면 교체된다.','Um Campo por jogador. Jogar outro o substitui.',"प्रति खिलाड़ी एक क्षेत्र कार्ड। दूसरा खेलने पर पहला बदल जाता है।","بطاقة ساحة واحدة لكل لاعب. لعب بطاقة أخرى يستبدلها.","Une carte Terrain par joueur. En jouer une autre la remplace.","প্রতি খেলোয়াড়ের একটি ক্ষেত্র কার্ড। অন্যটি খেললে আগেরটি বদলে যায়।","Одна карта Поля на игрока. Новая карта Поля заменяет прежнюю.","Satu kartu Medan per pemain. Memainkan kartu Medan lain akan menggantinya."],
   'r9':['山札が尽きて引けないと1ダメージ。相手のライフを0にしたら勝ち。','If you must draw from an empty deck, you take 1 damage. Reduce the opponent\'s life to 0 to win.','牌库耗尽无法抽牌时受到1点伤害。将对手生命降为0即可获胜。','Si debes robar de un mazo vacío, recibes 1 de daño. Gana dejando la vida del rival en 0.','덱이 비어 뽑을 수 없으면 1 데미지. 상대 라이프를 0으로 만들면 승리.','Se precisar comprar de um deck vazio, sofre 1 de dano. Zere a vida do oponente para vencer.',"खाली डेक से कार्ड लेना पड़े तो आपको 1 क्षति होती है। विरोधी का जीवन 0 करके जीतें।","إذا اضطررت للسحب من مجموعة فارغة، تتلقى 1 ضرر. اخفض حياة الخصم إلى 0 لتفوز.","Si vous devez piocher dans un deck vide, vous subissez 1 dégât. Réduisez la vie adverse à 0 pour gagner.","খালি ডেক থেকে কার্ড তুলতে হলে আপনি 1 ক্ষতি পান। প্রতিপক্ষের জীবন 0 করে জিতুন।","Если нужно взять карту из пустой колоды, вы получаете 1 урон. Снизьте жизнь противника до 0, чтобы победить.","Jika harus mengambil dari dek kosong, Anda menerima 1 damage. Kurangi nyawa lawan menjadi 0 untuk menang."],
+  'acct.title':['アカウント','Account','账号','Cuenta','계정','Conta','खाता','الحساب','Compte','অ্যাকাউন্ট','Аккаунт','Akun'],
+  'acct.login':['ログイン','Log in','登录','Iniciar sesión','로그인','Entrar','लॉग इन करें','تسجيل الدخول','Se connecter','লগ ইন','Войти','Masuk'],
+  'acct.google':['Googleでログイン','Continue with Google','使用 Google 登录','Continuar con Google','Google로 로그인','Continuar com o Google','Google से जारी रखें','المتابعة باستخدام Google','Continuer avec Google','Google দিয়ে চালিয়ে যান','Войти через Google','Lanjutkan dengan Google'],
+  'acct.emailPh':['メールアドレス','Email address','电子邮箱','Correo electrónico','이메일 주소','E-mail','ईमेल पता','البريد الإلكتروني','Adresse e-mail','ইমেইল ঠিকানা','Адрес эл. почты','Alamat email'],
+  'acct.send':['ログイン用リンクを送る','Email me a login link','发送登录链接','Enviarme un enlace de acceso','로그인 링크 보내기','Enviar link de acesso','लॉगिन लिंक भेजें','أرسل لي رابط الدخول','M\'envoyer un lien de connexion','লগইন লিংক পাঠান','Прислать ссылку для входа','Kirim tautan masuk'],
+  'acct.sent':['{e} にログイン用のリンクを送りました。メールを開いてリンクを押してください','We sent a login link to {e}. Open the email and tap the link','登录链接已发送至 {e}。请打开邮件并点击链接','Enviamos un enlace a {e}. Abre el correo y pulsa el enlace','{e}(으)로 로그인 링크를 보냈습니다. 메일을 열고 링크를 눌러 주세요','Enviamos um link para {e}. Abra o e-mail e toque no link','{e} पर लॉगिन लिंक भेजा गया है। ईमेल खोलकर लिंक पर टैप करें','أرسلنا رابط الدخول إلى {e}. افتح البريد واضغط على الرابط','Nous avons envoyé un lien à {e}. Ouvrez l\'e-mail et touchez le lien','{e}-এ লগইন লিংক পাঠানো হয়েছে। ইমেইল খুলে লিংকে ট্যাপ করুন','Мы отправили ссылку на {e}. Откройте письмо и нажмите на ссылку','Tautan masuk dikirim ke {e}. Buka email dan ketuk tautannya'],
+  'acct.logout':['ログアウト','Log out','退出登录','Cerrar sesión','로그아웃','Sair','लॉग आउट','تسجيل الخروج','Se déconnecter','লগ আউট','Выйти','Keluar'],
+  'acct.as':['{e} でログイン中','Logged in as {e}','已登录：{e}','Sesión iniciada como {e}','{e}(으)로 로그인 중','Conectado como {e}','{e} के रूप में लॉग इन','مسجّل الدخول باسم {e}','Connecté en tant que {e}','{e} হিসেবে লগ ইন','Вы вошли как {e}','Masuk sebagai {e}'],
+  'acct.note':['ログインすると、データがクラウドに保存され、機種変更しても引き継げます。購入にはログインが必要です','Log in to save your data to the cloud and keep it when you change devices. Purchases require an account','登录后，数据会保存在云端，换手机也能继续。购买需要登录','Inicia sesión para guardar tus datos en la nube y conservarlos al cambiar de dispositivo. Para comprar necesitas una cuenta','로그인하면 데이터가 클라우드에 저장되어 기기를 바꿔도 이어서 할 수 있습니다. 구매하려면 로그인이 필요합니다','Entre para salvar seus dados na nuvem e mantê-los ao trocar de aparelho. Compras exigem uma conta','लॉग इन करने पर आपका डेटा क्लाउड में सहेजा जाता है और डिवाइस बदलने पर भी बना रहता है। खरीदारी के लिए खाता ज़रूरी है','سجّل الدخول لحفظ بياناتك في السحابة والاحتفاظ بها عند تغيير جهازك. تتطلب المشتريات حسابًا','Connectez-vous pour sauvegarder vos données dans le cloud et les garder en changeant d\'appareil. Les achats nécessitent un compte','লগ ইন করলে আপনার ডেটা ক্লাউডে সংরক্ষিত হয় এবং ডিভাইস বদলালেও থাকে। কেনাকাটার জন্য অ্যাকাউন্ট লাগবে','Войдите, чтобы хранить данные в облаке и не потерять их при смене устройства. Для покупок нужен аккаунт','Masuk untuk menyimpan data di cloud dan tetap memilikinya saat ganti perangkat. Pembelian memerlukan akun'],
+  'acct.needLogin':['購入するにはログインしてください','Log in to make purchases','请登录后购买','Inicia sesión para comprar','구매하려면 로그인해 주세요','Entre para fazer compras','खरीदारी के लिए लॉग इन करें','سجّل الدخول لإجراء عمليات الشراء','Connectez-vous pour acheter','কেনাকাটা করতে লগ ইন করুন','Войдите, чтобы совершать покупки','Masuk untuk melakukan pembelian'],
+  'acct.loaded':['アカウントのデータを読み込みました','Loaded your account data','已读取账号数据','Datos de tu cuenta cargados','계정 데이터를 불러왔습니다','Dados da conta carregados','खाते का डेटा लोड हो गया','تم تحميل بيانات حسابك','Données du compte chargées','অ্যাকাউন্টের ডেটা লোড হয়েছে','Данные аккаунта загружены','Data akun dimuat'],
+  'acct.cloudSaved':['データはアカウント（クラウド）に保存されています','Your data is saved to your account (cloud)','数据已保存到账号（云端）','Tus datos se guardan en tu cuenta (nube)','데이터는 계정(클라우드)에 저장됩니다','Seus dados são salvos na sua conta (nuvem)','आपका डेटा आपके खाते (क्लाउड) में सहेजा जाता है','تُحفظ بياناتك في حسابك (السحابة)','Vos données sont sauvegardées dans votre compte (cloud)','আপনার ডেটা অ্যাকাউন্টে (ক্লাউডে) সংরক্ষিত','Данные сохраняются в аккаунте (облаке)','Data Anda disimpan di akun (cloud)'],
+  'pay.redirect':['お支払いページに移動します…','Opening the payment page…','正在前往付款页面…','Abriendo la página de pago…','결제 페이지로 이동합니다…','Abrindo a página de pagamento…','भुगतान पेज खुल रहा है…','جارٍ فتح صفحة الدفع…','Ouverture de la page de paiement…','পেমেন্ট পেজ খুলছে…','Открываем страницу оплаты…','Membuka halaman pembayaran…'],
+  'pay.pending':['お支払いを確認しています…','Confirming your payment…','正在确认付款…','Confirmando tu pago…','결제를 확인하고 있습니다…','Confirmando seu pagamento…','आपका भुगतान जाँचा जा रहा है…','جارٍ تأكيد الدفع…','Confirmation du paiement…','আপনার পেমেন্ট যাচাই হচ্ছে…','Подтверждаем оплату…','Mengonfirmasi pembayaran…'],
+  'pay.done':['購入が完了しました！','Purchase complete!','购买完成！','¡Compra completada!','구매가 완료되었습니다!','Compra concluída!','खरीदारी पूरी हुई!','اكتمل الشراء!','Achat terminé !','কেনাকাটা সম্পন্ন!','Покупка завершена!','Pembelian selesai!'],
+  'pay.error':['購入を進められませんでした。時間をおいてもう一度お試しください','Something went wrong. Please try again later','无法继续购买，请稍后再试','Algo salió mal. Inténtalo de nuevo más tarde','구매를 진행할 수 없습니다. 잠시 후 다시 시도해 주세요','Algo deu errado. Tente novamente mais tarde','कुछ गड़बड़ हुई। कृपया बाद में फिर कोशिश करें','حدث خطأ ما. حاول مرة أخرى لاحقًا','Une erreur est survenue. Réessayez plus tard','কিছু ভুল হয়েছে। পরে আবার চেষ্টা করুন','Что-то пошло не так. Попробуйте позже','Terjadi kesalahan. Coba lagi nanti'],
+  'pay.manage':['お支払いの管理・解約','Manage payments & cancel','管理付款与取消','Gestionar pagos y cancelar','결제 관리・해지','Gerenciar pagamentos e cancelar','भुगतान प्रबंधित करें और रद्द करें','إدارة المدفوعات والإلغاء','Gérer les paiements et résilier','পেমেন্ট পরিচালনা ও বাতিল','Управление платежами и отмена','Kelola pembayaran & batalkan'],
+  'pay.stripeTest':['テスト決済モード：本物のお金は動きません（カード番号 4242 4242 4242 4242 で試せます）','Test payment mode: no real money moves (try card 4242 4242 4242 4242)','测试支付模式：不会产生真实扣款（可用卡号 4242 4242 4242 4242 测试）','Modo de pago de prueba: no se cobra dinero real (prueba la tarjeta 4242 4242 4242 4242)','테스트 결제 모드: 실제 돈은 움직이지 않습니다 (카드 번호 4242 4242 4242 4242로 시험 가능)','Modo de pagamento de teste: nenhum dinheiro real (teste o cartão 4242 4242 4242 4242)','टेस्ट भुगतान मोड: असली पैसा नहीं कटता (कार्ड 4242 4242 4242 4242 से आज़माएँ)','وضع الدفع التجريبي: لا تُنقل أموال حقيقية (جرّب البطاقة 4242 4242 4242 4242)','Mode de paiement test : aucun argent réel (essayez la carte 4242 4242 4242 4242)','টেস্ট পেমেন্ট মোড: আসল টাকা কাটা হয় না (কার্ড 4242 4242 4242 4242 দিয়ে দেখুন)','Тестовый режим оплаты: реальные деньги не списываются (карта 4242 4242 4242 4242)','Mode pembayaran uji: tidak ada uang sungguhan (coba kartu 4242 4242 4242 4242)'],
+  'pass.noteWeb':['自動更新です。解約はいつでも「お支払いの管理・解約」からできます。無料期間中に解約すれば料金はかかりません','Auto-renews. Cancel anytime from “Manage payments & cancel”. Cancel during the free trial and you won’t be charged','自动续订。可随时在「管理付款与取消」中取消。在免费期内取消则不收费','Se renueva automáticamente. Cancela cuando quieras en «Gestionar pagos y cancelar». Si cancelas durante la prueba, no se te cobrará','자동 갱신입니다. 해지는 언제든지 「결제 관리・해지」에서 할 수 있습니다. 무료 기간 중에 해지하면 요금이 들지 않습니다','Renova automaticamente. Cancele quando quiser em “Gerenciar pagamentos e cancelar”. Cancelando no teste grátis, não há cobrança','अपने आप नवीनीकृत होता है। “भुगतान प्रबंधित करें और रद्द करें” से कभी भी रद्द करें। मुफ़्त ट्रायल में रद्द करने पर कोई शुल्क नहीं','يتجدد تلقائيًا. ألغِه في أي وقت من «إدارة المدفوعات والإلغاء». إذا ألغيته خلال الفترة المجانية فلن تُحاسَب','Renouvellement automatique. Résiliez à tout moment via « Gérer les paiements et résilier ». Aucun frais si vous résiliez pendant l\'essai','স্বয়ংক্রিয়ভাবে নবায়ন হয়। “পেমেন্ট পরিচালনা ও বাতিল” থেকে যেকোনো সময় বাতিল করুন। ফ্রি ট্রায়ালে বাতিল করলে চার্জ লাগবে না','Продлевается автоматически. Отменить можно в любое время в разделе «Управление платежами и отмена». При отмене в пробный период плата не взимается','Diperpanjang otomatis. Batalkan kapan saja lewat “Kelola pembayaran & batalkan”. Jika dibatalkan selama uji gratis, Anda tidak ditagih'],
+  'legal.title':['法的表示','Legal','法律信息','Información legal','법적 고지','Informações legais','कानूनी जानकारी','المعلومات القانونية','Mentions légales','আইনি তথ্য','Правовая информация','Informasi hukum'],
+  'legal.tokushoho':['特定商取引法に基づく表記','Specified Commercial Transactions Act notice','特定商业交易法标示','Aviso según la Ley de Transacciones Comerciales','특정상거래법에 따른 표기','Aviso da Lei de Transações Comerciais','विशिष्ट वाणिज्यिक लेनदेन अधिनियम सूचना','إشعار قانون المعاملات التجارية','Mentions (loi japonaise sur le commerce)','বিশেষ বাণিজ্যিক লেনদেন আইন বিজ্ঞপ্তি','Сведения по закону о торговых сделках','Pemberitahuan UU Transaksi Komersial'],
+  'legal.terms':['利用規約','Terms of Service','服务条款','Términos del servicio','이용약관','Termos de serviço','सेवा की शर्तें','شروط الخدمة','Conditions d\'utilisation','সেবার শর্তাবলি','Условия использования','Ketentuan Layanan'],
+  'legal.privacy':['プライバシーポリシー','Privacy Policy','隐私政策','Política de privacidad','개인정보 처리방침','Política de privacidade','गोपनीयता नीति','سياسة الخصوصية','Politique de confidentialité','গোপনীয়তা নীতি','Политика конфиденциальности','Kebijakan Privasi'],
+  'legal.prepaid':['資金決済法に基づく表示','Payment Services Act notice','资金结算法标示','Aviso según la Ley de Servicios de Pago','자금결제법에 따른 표시','Aviso da Lei de Serviços de Pagamento','भुगतान सेवा अधिनियम सूचना','إشعار قانون خدمات الدفع','Mentions (loi japonaise sur les paiements)','পেমেন্ট সেবা আইন বিজ্ঞপ্তি','Сведения по закону о платёжных услугах','Pemberitahuan UU Layanan Pembayaran'],
 };
 
 function t(k,p){
@@ -1358,7 +1383,8 @@ function loadSave(){
   }catch(e){}
   return defSave();
 }
-function save(){ try{ localStorage.setItem(SAVE_KEY,JSON.stringify(SV)); }catch(e){} }
+function saveLocal(){ try{ localStorage.setItem(SAVE_KEY,JSON.stringify(SV)); }catch(e){} }
+function save(){ saveLocal(); if(typeof cloudPushSoon==='function') cloudPushSoon(); }
 // Ver.2.2の新カードを、遊んでいた人にも新しく始めた人にも2枚ずつ配る（デッキ構築を試せるように）
 function applyGifts(){
   SV.gifts=SV.gifts||[];
@@ -2428,13 +2454,200 @@ const PORTA_USE={refill:60, pack1:100, pack5:500, pack11:1000, gc:15};
 const AGE_CAP={u16:5000, u18:10000, adult:Infinity};
 const PASS_COLORS=['#d4af37','#c0c8d0','#ff3d7f'];
 
+/* =====================================================================
+   クラウド：ログイン（Google／メール）・クラウド保存・Stripe決済
+   - 有償ポルタ・購入履歴・年齢・ゲートパスはサーバー（Supabase）が正
+   - CLOUD.url と CLOUD.anon が空のあいだは今まで通り（購入は「準備中」）
+   ===================================================================== */
+const CLOUD = {
+  url: '',          // SupabaseのProject URL（例：https://abcd1234.supabase.co）
+  anon: '',         // Supabaseの anon public キー（公開してよいキー）
+  testMode: true,   // Stripeのテストモード中は true（ショップに「テスト決済」と表示）
+};
+function cloudOn(){ return !!(CLOUD.url && CLOUD.anon && window.supabase); }
+let sb=null, CU=null, pushTimer=null;
+const WALLET={loaded:false, w:null, spent:0};
+const LEGAL_PAGES=[['legal.tokushoho','legal/tokushoho.html'],['legal.terms','legal/terms.html'],['legal.privacy','legal/privacy.html'],['legal.prepaid','legal/prepaid.html']];
+
+function cloudInit(){
+  if(!cloudOn()) return;
+  if(BUILD!=='dev') SV.settings.test=false;   // 課金ありの公開版では「パス無制限」の練習モードは使えない
+  sb=window.supabase.createClient(CLOUD.url, CLOUD.anon, {auth:{persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, flowType:'pkce'}});
+  sb.auth.onAuthStateChange((ev,session)=>{
+    const u=session?.user||null, changed=(u?.id||null)!==(CU?.id||null);
+    CU=u;
+    if(!changed) return;
+    if(u) setTimeout(cloudAfterLogin,0);
+    else { WALLET.loaded=false; WALLET.w=null; SV.porta.paid=0; saveLocal(); renderApp(true); }
+  });
+  sb.auth.getSession().then(({data})=>{ if(!data.session){ SV.porta.paid=0; saveLocal(); handleReturn(); } });
+  addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden' && pushTimer){ clearTimeout(pushTimer); pushTimer=null; cloudPush(); } });
+}
+async function cloudAfterLogin(){
+  try{ await cloudPull(); await walletRefresh(); await claimGrants(); }catch(e){ console.warn('cloud', e); }
+  renderApp(true); if(S) render();
+  handleReturn();
+}
+// アカウントのセーブを読み込む（この端末で初めてのログインなら、クラウド側を優先）
+async function cloudPull(){
+  const {data,error}=await sb.from('saves').select('data,updated_at').eq('user_id',CU.id).maybeSingle();
+  if(error) throw error;
+  const linked = SV.cloud && SV.cloud.uid===CU.id;
+  if(data && data.data && data.data.v===1){
+    const ct=new Date(data.updated_at).getTime();
+    if(!linked || ct>(SV.cloud.t||0)){
+      try{ localStorage.setItem(SAVE_KEY, JSON.stringify(data.data)); }catch(e){}
+      SV=loadSave(); SV.cloud={uid:CU.id, t:ct}; setLang(SV.lang); saveLocal();
+      if(!linked) toast(t('acct.loaded'));
+      return;
+    }
+  }
+  SV.cloud={uid:CU.id, t:SV.cloud?.uid===CU.id?SV.cloud.t:0};
+  await cloudPush();
+}
+function cloudPushSoon(){ if(!CU) return; clearTimeout(pushTimer); pushTimer=setTimeout(()=>{ pushTimer=null; cloudPush(); },2500); }
+async function cloudPush(){
+  if(!CU||!sb) return;
+  const at=Date.now(), data=JSON.parse(JSON.stringify(SV)); delete data.cloud;
+  const {error}=await sb.from('saves').upsert({user_id:CU.id, data, updated_at:new Date(at).toISOString()});
+  if(!error){ SV.cloud={uid:CU.id, t:at}; saveLocal(); }
+}
+// サーバーの財布（有償ポルタ・年齢・初回2倍・パス）を画面に反映
+async function walletRefresh(){
+  const {data:w,error}=await sb.rpc('my_wallet'); if(error) throw error;
+  const {data:spent}=await sb.rpc('my_month_spent');
+  WALLET.loaded=true; WALLET.w=w; WALLET.spent=spent||0;
+  SV.porta.paid=w.paid; SV.pay.age=w.age_group;
+  SV.pay.first=Object.fromEntries((w.first_bought||[]).map(id=>[id,true]));
+  SV.pay.bought.starter=!!w.starter_bought; SV.pass.trialUsed=!!w.trial_used;
+  const pu=w.pass_until?new Date(w.pass_until).getTime():0;
+  if(pu>(SV.pass.until||0)){ const was=passActive(); SV.pass.until=pu; if(!was){ if(!SV.pass.bank) SV.pass.bank=1; SV.pass.lastDay=dayNum(); } }
+  saveLocal();
+}
+// 購入で増えたパック・アイコン枠を受け取る
+async function claimGrants(){
+  const {data,error}=await sb.rpc('claim_grants'); if(error) throw error;
+  for(const g of data||[]){
+    if(g.kind==='packs') SV.pk.bonus+=g.amount;
+    else if(g.kind==='item' && g.item && !SV.shop.owned.includes(g.item)) SV.shop.owned.push(g.item);
+  }
+  if((data||[]).length) save();
+  return data||[];
+}
+// Stripeのお支払いページから戻ってきたとき
+async function handleReturn(){
+  let q; try{ q=new URLSearchParams(location.search); }catch(e){ return; }
+  const c=q.get('checkout'); if(!c && !q.get('portal')) return;
+  q.delete('checkout'); q.delete('portal');
+  try{ history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')+location.hash); }catch(e){}
+  if(c!=='success' || !CU) return;
+  let since=0, prod=''; try{ since=+sessionStorage.getItem('gate.co')||0; prod=sessionStorage.getItem('gate.coProd')||''; }catch(e){}
+  toast(t('pay.pending'));
+  for(let i=0;i<12;i++){
+    await new Promise(r=>setTimeout(r,1500));
+    try{
+      const {data:rows}=await sb.from('purchases').select('id').gte('created_at',new Date(since-10*60e3).toISOString()).limit(1);
+      await claimGrants(); await walletRefresh();
+      const passOk = prod==='pass' && WALLET.w.pass_until && new Date(WALLET.w.pass_until).getTime()>Date.now();
+      if((rows&&rows.length) || passOk){ toast(t('pay.done')); flash(); renderApp(true); if(!$('#modal').hidden) showPortaShop(); return; }
+    }catch(e){}
+  }
+  renderApp(true);
+}
+async function callFn(name, body){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session) throw new Error('login');
+  const r=await fetch(CLOUD.url+'/functions/v1/'+name,{method:'POST',
+    headers:{'Content-Type':'application/json', Authorization:'Bearer '+session.access_token, apikey:CLOUD.anon},
+    body:JSON.stringify(body||{})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) { const e=new Error(j.error||'server'); e.info=j; throw e; }
+  return j;
+}
+async function stripeCheckout(prod,opt={}){
+  if(!CU){ toast(t('acct.needLogin')); showLogin(); return; }
+  if(!WALLET.loaded){ try{ await walletRefresh(); }catch(e){} }
+  if(!SV.pay.age){ APP.pendingCloudBuy={prod,opt}; showAgeGate(prod); return; }
+  const cap=AGE_CAP[SV.pay.age], charge=opt.trial?0:prod.yen;
+  if(spentThisMonth()+charge>cap){ toast(t('pay.cap',{n:cap.toLocaleString('ja-JP')})); return; }
+  toast(t('pay.redirect'));
+  try{
+    const j=await callFn('checkout',{product:prod.id, trial:!!opt.trial});
+    try{ sessionStorage.setItem('gate.co',String(Date.now())); sessionStorage.setItem('gate.coProd',prod.id); }catch(e){}
+    if(pushTimer){ clearTimeout(pushTimer); pushTimer=null; } await cloudPush();
+    location.href=j.url;
+  }catch(e){
+    if(e.message==='cap') toast(t('pay.cap',{n:cap.toLocaleString('ja-JP')}));
+    else if(e.message==='login'){ toast(t('acct.needLogin')); showLogin(); }
+    else toast(t('pay.error'));
+  }
+}
+async function openPortal(){
+  try{ const j=await callFn('portal'); location.href=j.url; }catch(e){ toast(t('pay.error')); }
+}
+function showLogin(){
+  if(!cloudOn()) return;
+  showModal(`<h2>${t('acct.title')}</h2><p class="meta">${t('acct.note')}</p>
+    <div class="list"><button class="btn" data-act="acctGoogle">${t('acct.google')}</button>
+    <div class="field"><input id="acctEmail" type="email" autocomplete="email" inputmode="email" placeholder="${t('acct.emailPh')}" aria-label="${t('acct.emailPh')}"><button class="ghost-btn" data-act="acctEmail">${t('acct.send')}</button></div></div>
+    <p class="row"><button class="ghost-btn" data-act="closeModal">${t('close')}</button></p>`,'login-modal');
+}
+function acctHTML(){
+  if(!cloudOn()) return '';
+  const acct = CU
+    ? `<p>${t('acct.as',{e:esc(CU.email||'')})}</p><div class="row"><button class="ghost-btn" data-act="payManage">${t('pay.manage')}</button><button class="ghost-btn" data-act="acctLogout">${t('acct.logout')}</button></div>`
+    : `<p class="meta">${t('acct.note')}</p><button class="btn sm" data-act="acctLogin">${t('acct.login')}</button>`;
+  return `<section class="panel"><h3>${t('acct.title')}</h3>${acct}</section>`;
+}
+function legalHTML(){
+  if(!cloudOn()) return '';
+  return `<section class="panel"><h3>${t('legal.title')}</h3><div class="list">${LEGAL_PAGES.map(([k,href])=>`<a class="ghost-btn" href="${href}" target="_blank" rel="noopener">${t(k)}</a>`).join('')}</div></section>`;
+}
+// クラウド版の操作（ポルタショップ・設定から呼ばれる）
+function cloudAct(act,d){
+  if(!cloudOn()) return false;
+  switch(act){
+    case 'buyPorta': stripeCheckout(PORTA_PACKS.find(p=>p.id===d.id)); return true;
+    case 'buyStarter': stripeCheckout(STARTER_SET); return true;
+    case 'passBuy': stripeCheckout(PASS); return true;
+    case 'passTrial': stripeCheckout(PASS,{trial:true}); return true;
+    case 'payManage': openPortal(); return true;
+    case 'acctLogin': showLogin(); return true;
+    case 'acctGoogle': sb.auth.signInWithOAuth({provider:'google', options:{redirectTo:location.origin+location.pathname}}); return true;
+    case 'acctEmail': {
+      const email=($('#acctEmail')?.value||'').trim();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $('#acctEmail')?.focus(); return true; }
+      sb.auth.signInWithOtp({email, options:{emailRedirectTo:location.origin+location.pathname}})
+        .then(({error})=>{ if(error) toast(t('pay.error')); else { closeModal(); toast(t('acct.sent',{e:email})); } });
+      return true;
+    }
+    case 'acctLogout': (async()=>{ if(pushTimer){ clearTimeout(pushTimer); pushTimer=null; } await cloudPush(); await sb.auth.signOut(); SV.cloud=null; saveLocal(); renderApp(true); })(); return true;
+    case 'ageSet': {
+      sb.rpc('set_age_group',{g:d.a}).then(({error})=>{ if(error) throw error; return walletRefresh(); })
+        .then(()=>{ const pb=APP.pendingCloudBuy; APP.pendingCloudBuy=null; closeModal(); toast(t('pay.ageSaved')); showPortaShop(); })
+        .catch(()=>toast(t('pay.error')));
+      return true;
+    }
+  }
+  return false;
+}
+
 function portaTotal(){ return (SV.porta.paid||0)+(SV.porta.free||0); }
 // 無償分から先に使う
-function spendPorta(n){ if(portaTotal()<n) return false; const f=Math.min(SV.porta.free,n); SV.porta.free-=f; SV.porta.paid-=(n-f); save(); return true; }
+function spendPorta(n){
+  if(portaTotal()<n) return false;
+  const f=Math.min(SV.porta.free,n), p=n-f;
+  if(p>0 && cloudOn()){
+    if(!CU) return false;
+    SV.porta.paid-=p;
+    sb.rpc('spend_porta',{n:p, reason:'use'}).then(({error})=>{ if(error){ SV.porta.free+=f; walletRefresh().catch(()=>{}).finally(()=>{ toast(t('pay.error')); renderApp(true); }); } });
+  } else SV.porta.paid-=p;
+  SV.porta.free-=f; save(); return true;
+}
 function priceText(x){ return LANG==='ja' ? `¥${x.yen.toLocaleString('ja-JP')}` : `$${x.usd.toFixed(2)}`; }
-function payEnabled(){ return BUILD==='dev' && devOn(); }
+function payEnabled(){ return cloudOn() || (BUILD==='dev' && devOn()); }
 function monthKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1); }
-function spentThisMonth(){ if(SV.pay.month!==monthKey()){ SV.pay.month=monthKey(); SV.pay.spent=0; } return SV.pay.spent; }
+function spentThisMonth(){ if(cloudOn()) return WALLET.spent||0; if(SV.pay.month!==monthKey()){ SV.pay.month=monthKey(); SV.pay.spent=0; } return SV.pay.spent; }
 function checkout(prod,onOk){
   if(!payEnabled()){ toast(t('pay.soon')); return; }
   if(!SV.pay.age){ showAgeGate(prod); APP.pendingBuy=onOk; return; }
@@ -2515,15 +2728,17 @@ function showPortaShop(tab){
       <p class="meta">${t('pass.value',{n:PASS.days*PASS.dailyPacks,p:PASS.days*PASS.dailyPorta})}</p>
       ${act?`<p class="gain">${t('pass.active',{n:passDaysLeft()})}</p>${SV.pass.bank?`<button class="btn" data-act="passClaim">${t('pass.claim',{n:SV.pass.bank})}</button>`:`<p class="meta">${t('pass.claimedToday')}</p>`}`
         :`${!SV.pass.trialUsed?buyBtn('passTrial','trial',t('pass.trial',{n:PASS.trial})):''}${buyBtn('passBuy','pass',t('pass.buy',{p:priceText(PASS)}))}`}
-      <p class="note">${t('pass.note')}</p></div>`;
+      <p class="note">${cloudOn()?t('pass.noteWeb'):t('pass.note')}</p>${cloudOn()&&CU?`<button class="ghost-btn" data-act="payManage">${t('pay.manage')}</button>`:''}</div>`;
   }
   showModal(`<div class="row between"><h2>${t('porta.shop')}</h2><span class="pts porta"><span class="crystal">◆</span><b class="num">${portaTotal()}</b></span></div>
     <p class="meta">${t('porta.balance',{a:SV.porta.paid,b:SV.porta.free})}</p>
+    ${cloudOn()&&!CU?`<div class="offer"><b>${t('acct.needLogin')}</b><button class="btn sm" data-act="acctLogin">${t('acct.login')}</button></div>`:''}
     <div class="seg wrap">${tabs}</div>${body}
-    <p class="note">${payEnabled()?t('pay.testNote'):t('pay.soonNote')}${SV.pay.age&&SV.pay.age!=='adult'?'　'+t('pay.capNow',{a:spentThisMonth().toLocaleString('ja-JP'),b:AGE_CAP[SV.pay.age].toLocaleString('ja-JP')}):''}</p>
+    <p class="note">${cloudOn()?(CLOUD.testMode?t('pay.stripeTest'):''):payEnabled()?t('pay.testNote'):t('pay.soonNote')}${SV.pay.age&&SV.pay.age!=='adult'?'　'+t('pay.capNow',{a:spentThisMonth().toLocaleString('ja-JP'),b:AGE_CAP[SV.pay.age].toLocaleString('ja-JP')}):''}</p>
     <p class="row"><button class="ghost-btn" data-act="closeModal">${t('close')}</button></p>`,'shop-modal');
 }
 function portaAct(act,d){
+  if(cloudAct(act,d)) return true;
   switch(act){
     case 'porta': showPortaShop(); return true;
     case 'portaTab': showPortaShop(d.k); return true;
@@ -2765,7 +2980,7 @@ function settingsHTML(){
   const seg=(act,vals,cur,lab)=>`<div class="seg">${vals.map(v=>`<button class="${v===cur?'on':''}" data-act="${act}" data-v="${v}">${lab(v)}</button>`).join('')}</div>`;
   const cm=Math.round(s.tableHeight*100);
   const modeSec = BUILD==='dev' ? `<section class="panel mode-panel"><h3>${t('mode.title')}</h3><div class="seg"><button class="${devOn()?'':'on'}" data-act="modeUser">${t('mode.user')}</button><button class="${devOn()?'on':''}" data-act="modeDev">${t('mode.dev')}</button></div>${devOn()?`<button class="btn sm" data-act="devOpen">${t('dev.open')}</button>`:''}<p class="meta">${t('mode.note')}</p></section>` : '';
-  return `${modeSec}<section class="panel"><h3>${t('st.lang')}</h3><div class="seg wrap">${LANGS.map(([c,n])=>`<button class="${c===LANG?'on':''}" data-act="lang" data-v="${c}" lang="${c}">${n}</button>`).join('')}</div></section>
+  return `${modeSec}${acctHTML()}<section class="panel"><h3>${t('st.lang')}</h3><div class="seg wrap">${LANGS.map(([c,n])=>`<button class="${c===LANG?'on':''}" data-act="lang" data-v="${c}" lang="${c}">${n}</button>`).join('')}</div></section>
     <section class="panel">
       <h3>${t('st.speed')}</h3>${seg('speed',[0.5,1,2],s.speed,v=>'×'+v)}
       <h3>${t('st.view')}</h3>${seg('viewSet',[0,1],s.view,v=>t(v?'view.close':'view.top'))}
@@ -2774,15 +2989,15 @@ function settingsHTML(){
     </section>
     <section class="panel">
       <div class="row"><button class="ghost-btn" data-act="rules">${t('st.rules')}</button><button class="ghost-btn" data-act="odds">${t('odds.title')}</button></div>
-      <h3>${t('st.test')}</h3>${seg('test',[1,0],s.test?1:0,v=>t(v?'st.on':'st.off'))}
-      <p class="meta">${t('st.save')}</p>
+      ${BUILD==='dev'||!cloudOn()?`<h3>${t('st.test')}</h3>${seg('test',[1,0],s.test?1:0,v=>t(v?'st.on':'st.off'))}`:''}
+      <p class="meta">${CU?t('acct.cloudSaved'):t('st.save')}</p>
       <button class="danger-btn" data-act="reset">${APP.resetArm?t('st.resetConfirm'):t('st.reset')}</button>
       <p class="meta">${t('st.version')} ${APP_VERSION}${BUILD==='dev'?'（dev）':''}</p>
     </section>
     <section class="panel"><h3>${t('gift.title')}</h3>
       <p class="meta">${t('fr.id')}：<b class="num">${SV.profile.id}</b></p>
       <div class="row"><input id="giftIn" placeholder="GIFT1-…" aria-label="${t('gift.title')}"><button class="btn sm" data-act="redeemGift">${t('gift.redeem')}</button></div>
-    </section>`;
+    </section>${legalHTML()}`;
 }
 
 /* ----- モーダル ----- */
@@ -3930,6 +4145,7 @@ function stopPreview(){
 /* ===== 起動 ===== */
 (async()=>{
   SV=loadSave(); setLang(SV.lang);
+  cloudInit();
   const gifted=applyGifts(); CONFIG.animSpeed=SV.settings.speed||1; viewIdx=SV.settings.view||0;
   try{ await Promise.race([Promise.all([document.fonts.load('40px "Dela Gothic One"'),document.fonts.load('bold 20px "JetBrains Mono"'),document.fonts.load('bold 20px "Zen Kaku Gothic New"')]), new Promise(r=>setTimeout(r,2500))]); }catch(e){}
   init3D();
