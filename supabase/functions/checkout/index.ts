@@ -5,6 +5,8 @@ import { AGE_CAP, PASS_TRIAL_DAYS, PRODUCTS, admin, cors, currentUser, customerF
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors(req) });
   if (req.method !== "POST") return json(req, { error: "method" }, 405);
+  // Sales switch: no checkout pages are created unless the secret PAYMENTS_ENABLED is "true".
+  if (Deno.env.get("PAYMENTS_ENABLED") !== "true") return json(req, { error: "disabled" }, 403);
   try {
     const user = await currentUser(req);
     if (!user) return json(req, { error: "login" }, 401);
