@@ -2463,6 +2463,7 @@ const CLOUD = {
   url: 'https://lvalxfgbazyoavoswtep.supabase.co',          // SupabaseのProject URL（例：https://abcd1234.supabase.co）
   anon: 'sb_publishable_-jSor_tr4Dl3NHO0S-O8_A_JD_x4Vm8',  // Supabaseの Publishable キー（公開してよいキー）
   testMode: true,   // Stripeのテストモード中は true（ショップに「テスト決済」と表示）
+  payments: false,  // 課金を受け付けるか。false の間は購入ボタンが「準備中」（ログイン・クラウド保存は使える）
 };
 function cloudOn(){ return !!(CLOUD.url && CLOUD.anon && window.supabase); }
 let sb=null, CU=null, pushTimer=null;
@@ -2565,6 +2566,7 @@ async function callFn(name, body){
   return j;
 }
 async function stripeCheckout(prod,opt={}){
+  if(!CLOUD.payments){ toast(t('pay.soon')); return; }
   if(!CU){ toast(t('acct.needLogin')); showLogin(); return; }
   if(!WALLET.loaded){ try{ await walletRefresh(); }catch(e){} }
   if(!SV.pay.age){ APP.pendingCloudBuy={prod,opt}; showAgeGate(prod); return; }
@@ -2595,7 +2597,7 @@ function showLogin(){
 function acctHTML(){
   if(!cloudOn()) return '';
   const acct = CU
-    ? `<p>${t('acct.as',{e:esc(CU.email||'')})}</p><div class="row"><button class="ghost-btn" data-act="payManage">${t('pay.manage')}</button><button class="ghost-btn" data-act="acctLogout">${t('acct.logout')}</button></div>`
+    ? `<p>${t('acct.as',{e:esc(CU.email||'')})}</p><div class="row">${CLOUD.payments?`<button class="ghost-btn" data-act="payManage">${t('pay.manage')}</button>`:''}<button class="ghost-btn" data-act="acctLogout">${t('acct.logout')}</button></div>`
     : `<p class="meta">${t('acct.note')}</p><button class="btn sm" data-act="acctLogin">${t('acct.login')}</button>`;
   return `<section class="panel"><h3>${t('acct.title')}</h3>${acct}</section>`;
 }
@@ -2611,7 +2613,7 @@ function cloudAct(act,d){
     case 'buyStarter': stripeCheckout(STARTER_SET); return true;
     case 'passBuy': stripeCheckout(PASS); return true;
     case 'passTrial': stripeCheckout(PASS,{trial:true}); return true;
-    case 'payManage': openPortal(); return true;
+    case 'payManage': if(CLOUD.payments) openPortal(); else toast(t('pay.soon')); return true;
     case 'acctLogin': showLogin(); return true;
     case 'acctGoogle': sb.auth.signInWithOAuth({provider:'google', options:{redirectTo:location.origin+location.pathname}}); return true;
     case 'acctEmail': {
@@ -2645,7 +2647,8 @@ function spendPorta(n){
   SV.porta.free-=f; save(); return true;
 }
 function priceText(x){ return LANG==='ja' ? `¥${x.yen.toLocaleString('ja-JP')}` : `$${x.usd.toFixed(2)}`; }
-function payEnabled(){ return cloudOn() || (BUILD==='dev' && devOn()); }
+function payEnabled(){ return (cloudOn() && CLOUD.payments) || (BUILD==='dev' && devOn()); }
+function cloudPay(){ return cloudOn() && CLOUD.payments; }
 function monthKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1); }
 function spentThisMonth(){ if(cloudOn()) return WALLET.spent||0; if(SV.pay.month!==monthKey()){ SV.pay.month=monthKey(); SV.pay.spent=0; } return SV.pay.spent; }
 function checkout(prod,onOk){
@@ -2728,13 +2731,13 @@ function showPortaShop(tab){
       <p class="meta">${t('pass.value',{n:PASS.days*PASS.dailyPacks,p:PASS.days*PASS.dailyPorta})}</p>
       ${act?`<p class="gain">${t('pass.active',{n:passDaysLeft()})}</p>${SV.pass.bank?`<button class="btn" data-act="passClaim">${t('pass.claim',{n:SV.pass.bank})}</button>`:`<p class="meta">${t('pass.claimedToday')}</p>`}`
         :`${!SV.pass.trialUsed?buyBtn('passTrial','trial',t('pass.trial',{n:PASS.trial})):''}${buyBtn('passBuy','pass',t('pass.buy',{p:priceText(PASS)}))}`}
-      <p class="note">${cloudOn()?t('pass.noteWeb'):t('pass.note')}</p>${cloudOn()&&CU?`<button class="ghost-btn" data-act="payManage">${t('pay.manage')}</button>`:''}</div>`;
+      <p class="note">${cloudPay()?t('pass.noteWeb'):t('pass.note')}</p>${cloudPay()&&CU?`<button class="ghost-btn" data-act="payManage">${t('pay.manage')}</button>`:''}</div>`;
   }
   showModal(`<div class="row between"><h2>${t('porta.shop')}</h2><span class="pts porta"><span class="crystal">◆</span><b class="num">${portaTotal()}</b></span></div>
     <p class="meta">${t('porta.balance',{a:SV.porta.paid,b:SV.porta.free})}</p>
-    ${cloudOn()&&!CU?`<div class="offer"><b>${t('acct.needLogin')}</b><button class="btn sm" data-act="acctLogin">${t('acct.login')}</button></div>`:''}
+    ${cloudPay()&&!CU?`<div class="offer"><b>${t('acct.needLogin')}</b><button class="btn sm" data-act="acctLogin">${t('acct.login')}</button></div>`:''}
     <div class="seg wrap">${tabs}</div>${body}
-    <p class="note">${cloudOn()?(CLOUD.testMode?t('pay.stripeTest'):''):payEnabled()?t('pay.testNote'):t('pay.soonNote')}${SV.pay.age&&SV.pay.age!=='adult'?'　'+t('pay.capNow',{a:spentThisMonth().toLocaleString('ja-JP'),b:AGE_CAP[SV.pay.age].toLocaleString('ja-JP')}):''}</p>
+    <p class="note">${cloudPay()?(CLOUD.testMode?t('pay.stripeTest'):''):payEnabled()?t('pay.testNote'):t('pay.soonNote')}${SV.pay.age&&SV.pay.age!=='adult'?'　'+t('pay.capNow',{a:spentThisMonth().toLocaleString('ja-JP'),b:AGE_CAP[SV.pay.age].toLocaleString('ja-JP')}):''}</p>
     <p class="row"><button class="ghost-btn" data-act="closeModal">${t('close')}</button></p>`,'shop-modal');
 }
 function portaAct(act,d){
