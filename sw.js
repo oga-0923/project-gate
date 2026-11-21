@@ -10,7 +10,7 @@ const SHELL = [
   './icon-512.png',
   './apple-touch-icon.png',
   'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.min.js',
 ];
 
 self.addEventListener('install', (e) => {
