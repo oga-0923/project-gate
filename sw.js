@@ -1,7 +1,7 @@
 // PROJECT GATE service worker: lets the game install as an app and run offline.
 // The page itself is fetched network-first (so updates arrive right away);
 // everything else (icons, three.js, fonts) is cache-first.
-const VERSION = 'gate-2.7.0-1';
+const VERSION = 'gate-2.8.0-1';
 const SHELL = [
   './',
   './index.html',
@@ -10,6 +10,7 @@ const SHELL = [
   './icon-512.png',
   './apple-touch-icon.png',
   'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js',
 ];
 
 self.addEventListener('install', (e) => {
@@ -41,6 +42,7 @@ self.addEventListener('fetch', (e) => {
 
   const cacheable = url.origin === location.origin ||
     url.hostname === 'cdnjs.cloudflare.com' ||
+    url.hostname === 'cdn.jsdelivr.net' ||
     url.hostname === 'fonts.googleapis.com' ||
     url.hostname === 'fonts.gstatic.com';
   if (!cacheable) return;
